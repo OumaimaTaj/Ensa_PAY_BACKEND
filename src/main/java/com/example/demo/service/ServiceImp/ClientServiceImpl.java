@@ -85,7 +85,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public Client createClient(UserDto userDto, Long idAgent) {
+    public Client createClient(UserDto userDto, Long userId) {
         this.logger.info("Create new client {}",userDto.getUsername());
 
         // generate password
@@ -110,10 +110,13 @@ public class ClientServiceImpl implements ClientService {
         Client newClient  = Client.builder()
                 .user(user)
                 .build();
-        newClient.setAgent(agentRepository.findById(idAgent).get());
+        // find agent by user id
+        Agent agent = agentRepository.findByUser(userRepository.findById(userId).get());
+        System.out.println(agent.getId());
+        newClient.setAgent(agent);
         clientRepository.save(newClient);
-        // Send generated password to client
-        mailService.sendPasswordMail(user,password);
+        // Send generated password and e-code to client
+        mailService.sendPasswordAndECodeMail(user,password,user.getE_code());
         return newClient;
     }
 

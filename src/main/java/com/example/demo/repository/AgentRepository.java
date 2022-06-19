@@ -15,5 +15,6 @@ public interface AgentRepository extends JpaRepository<Agent, Long> {
 
     @Query( "select u from User u inner join u.roles r where r.name in :roles" )
     List<User> findBySpecificRoles(@Param("roles") RoleOfUser roles);
+    Agent findByUser(User user);
 
 }

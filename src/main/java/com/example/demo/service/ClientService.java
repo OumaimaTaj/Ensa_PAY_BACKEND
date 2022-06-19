@@ -13,7 +13,7 @@ public interface ClientService {
 
     void deleteClient(Client client);
 
-    Client createClient(UserDto userDto, Long idAgent);
+    Client createClient(UserDto userDto, Long userId);
 
     void changePassword(Client client, String password);
 

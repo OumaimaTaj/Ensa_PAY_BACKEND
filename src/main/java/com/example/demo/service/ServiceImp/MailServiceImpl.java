@@ -51,6 +51,24 @@ public class MailServiceImpl implements MailService {
     @Value("${app.name}")
     private String APP_NAME;
     @Override
+    public void sendPasswordAndECodeMail (User receiver,String password, Integer e_code) {
+        try {
+            String title = "Bienvenue chez "+APP_NAME;
+            String body = "Merci de votre inscription chez "+APP_NAME+".<br> Votre "+APP_NAME+" E-CODE est : <br> <strong>"+ e_code+"</strong><br><br> Vouz trouvez ci-dessous votre mot de passe , merci de ne pas les partager avec aucune autre :";
+            String htmlMsg =  getHtmlMsg(title,body,password,receiver);
+            MimeMessage message = getMimeMessage(
+                    receiver.getEmail(),
+                    "Bienvenue chez "+APP_NAME,
+                    htmlMsg
+            );
+            // Send message
+            Transport.send(message);
+            logger.info("Message sent successfully.");
+        } catch (MessagingException ex) {
+            ex.printStackTrace();
+        }
+    }
+    @Override
     public void sendPasswordMail (User receiver,String password) {
         try {
             String title = "Bienvenue chez "+APP_NAME;

@@ -33,9 +33,9 @@ public class ClientController {
         return clientService.getClients(RoleOfUser.ROLE_CLIENT);
     }
 
-    @PostMapping("/create/{idAgent}")
-    public Client createClient(@RequestBody UserDto userDto,@PathVariable(name = "idAgent") Long idAgent) {
-        return clientService.createClient(userDto,idAgent);
+    @PostMapping("/create/{userId}")
+    public Client createClient(@RequestBody UserDto userDto,@PathVariable(name = "userId") Long userId) {
+        return clientService.createClient(userDto,userId);
     }
 
 
