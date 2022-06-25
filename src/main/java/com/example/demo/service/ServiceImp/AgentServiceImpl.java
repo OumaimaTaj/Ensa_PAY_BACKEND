@@ -61,9 +61,9 @@ public class AgentServiceImpl implements AgentService {
         if(userRepository.existsByEmail(userDto.getEmail())){
             throw new InvalidCredentialsException("Email est invalide");
         }
-        if(userRepository.existsByIDCard(userDto.getIDCard())){
-            throw new InvalidCredentialsException("Numéro pièce d'identité est invalide");
-        }
+      //  if(userRepository.existsByIDCard(userDto.getIDCard())){
+      //      throw new InvalidCredentialsException("Numéro pièce d'identité est invalide");
+       // }
 
         // generate password
         String password = this.passwordGenerator();

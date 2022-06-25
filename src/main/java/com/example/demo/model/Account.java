@@ -23,7 +23,7 @@ public  class Account {
 
     private String id;
     private int code;
-    private long Rib;
+    private long rib;
 
     private double balance;
     private Date createdAt;

@@ -35,6 +35,8 @@ public class Client  implements Serializable {
     @OneToMany(mappedBy = "client", orphanRemoval = true,cascade=CascadeType.ALL)
     @JsonProperty(access =JsonProperty.Access.WRITE_ONLY )
     private List< Account> accounts;
+    @OneToMany(mappedBy = "client", orphanRemoval = true,cascade=CascadeType.ALL)
+    private List<Facture> factures;
 
 
 }

@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class CreditDTO {
-    private String accountId;
+    private Long accountId;
     private double amount;
 
 }

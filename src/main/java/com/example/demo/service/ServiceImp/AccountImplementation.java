@@ -15,6 +15,7 @@ import com.example.demo.repository.*;
 import com.example.demo.service.AccountService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -32,14 +33,18 @@ public class AccountImplementation implements AccountService
 {
 
 
-
+ @Autowired
     private ClientRepository  clientREpo;
 
-
+    @Autowired
     private UserRepository userRepo;
-   private AccountRepository accountRepo;
-     private AccountMapperImpl mapper;
+    @Autowired
+    private AccountRepository accountRepo;
+    @Autowired
+    private AccountMapperImpl mapper;
+    @Autowired
     private AccountOperationRepository accountOpRepo;
+    @Autowired
     private AgentRepository agentRepository;
 
 
@@ -52,18 +57,18 @@ public class AccountImplementation implements AccountService
         if(client == null){
             throw new UserNotFoundException("client not found");
         }
-      Account account = new Account() ;
+        Account account = new Account() ;
 
 
 
         account.setId(UUID.randomUUID().toString());
-      account.setCode((int)(Math.random()*(9000-1000+1)+1000));
-      account.setCreatedAt(new Date());
-      account.setBalance(initialBalence);
-      account.setStatus(AccountStatus.CREATED);
-      account.setClient(client);
-      account.setRib((int) (Math.random()*(900000000-100000000+1)+1000));
-      Account savedAccount = accountRepo.save(account);
+        account.setCode((int)(Math.random()*(9000-1000+1)+1000));
+        account.setCreatedAt(new Date());
+        account.setBalance(initialBalence);
+        account.setStatus(AccountStatus.CREATED);
+        account.setClient(client);
+        account.setRib((int) (Math.random()*(900000000-100000000+1)+1000));
+        Account savedAccount = accountRepo.save(account);
 
 
         return mapper.fromAccount(savedAccount);
@@ -73,9 +78,9 @@ public class AccountImplementation implements AccountService
     public Optional<User> geUser(Long clientId) {
 
 
-      Optional<User> client = userRepo.findById(clientId);
-      if ( client == null) throw new RuntimeException("Client not found");
-          return client;
+        Optional<User> client = userRepo.findById(clientId);
+        if ( client == null) throw new RuntimeException("Client not found");
+        return client;
     }
 
 
@@ -93,46 +98,47 @@ public class AccountImplementation implements AccountService
 
 
     @Override
-    public void debit(String accountId, double amount) {
+    public void debit(long accountRib, double amount) {
 
-        Account account = accountRepo.findById(accountId)
-                .orElseThrow(() -> new AccountNotFoundException("Account not found"));
+        Account account = accountRepo.findAccountByRib(accountRib);
+        // .orElseThrow(() -> new AccountNotFoundException("Account not found"));
         if(account.getBalance()< amount){
             throw new BalenceNotSufficentException(" Balence not sufficient ");
         }
 
 
-            AccountOperation accountOperation = new AccountOperation();
-            accountOperation.setType(OperationType.DEBIT);
-            accountOperation.setAmount(amount);
-            accountOperation.setOperationDate(new Date());
-            accountOperation.setAccount(account);
-            accountOpRepo.save(accountOperation);
-            account.setBalance(account.getBalance()-amount);
-            accountRepo.save(account);
-        }
+        AccountOperation accountOperation = new AccountOperation();
+        accountOperation.setType(OperationType.DEBIT);
+        accountOperation.setAmount(amount);
+        accountOperation.setOperationDate(new Date());
+        accountOperation.setAccount(account);
+        accountOpRepo.save(accountOperation);
+        account.setBalance(account.getBalance()-amount);
+        accountRepo.save(account);
+    }
 
 
 
     @Override
-    public void credit(String accountId, double amount) {
+    public void credit (long accountRib, double amount) {
 
 
-        Account account = accountRepo.findById(accountId)
-                .orElseThrow(() -> new AccountNotFoundException("Account not found"));
+        Account account = accountRepo.findAccountByRib(accountRib);
+        //  Account account = accountRepo.findAccountByRib(accountId);
+        //   .orElseThrow(() -> new AccountNotFoundException("Account not found"));
         if(account.getBalance()< amount){
             throw new BalenceNotSufficentException(" Balence not sufficient ");
         };
 
-            AccountOperation accountOperation = new AccountOperation();
+        AccountOperation accountOperation = new AccountOperation();
 
-            accountOperation.setType(OperationType.CREDIT);
-            accountOperation.setAmount(amount);
-            accountOperation.setOperationDate(new Date());
-            accountOperation.setAccount(account);
-            accountOpRepo.save(accountOperation);
-            account.setBalance(account.getBalance()+amount);
-            accountRepo.save(account);
+        accountOperation.setType(OperationType.CREDIT);
+        accountOperation.setAmount(amount);
+        accountOperation.setOperationDate(new Date());
+        accountOperation.setAccount(account);
+        accountOpRepo.save(accountOperation);
+        account.setBalance(account.getBalance()+amount);
+        accountRepo.save(account);
 
     }
 
@@ -142,8 +148,10 @@ public class AccountImplementation implements AccountService
 
     }
 
+
+
     @Override
-    public void transfer(String accountIdSource, String accountIdDestination, double amount) throws AccountNotFoundException{
+    public void transfer(long accountIdSource, long accountIdDestination, double amount) throws AccountNotFoundException{
 
         debit(accountIdSource,amount);
         credit(accountIdDestination,amount);
@@ -157,17 +165,17 @@ public class AccountImplementation implements AccountService
 
         List<Account> accounts = accountRepo.findAll();
         List<AccountDto> accountsDto=accounts.stream().map(act
-        -> mapper.fromAccount(act)).collect(Collectors.toList());
+                -> mapper.fromAccount(act)).collect(Collectors.toList());
         return accountsDto;
 
 
     }
 
-@Override
+    @Override
     public List<AccountOperationDto> accountHistory(String accountId)
     {
-       List<AccountOperation> accountOperation =  accountOpRepo.findByAccountId(accountId);
-       return  accountOperation.stream().map(op -> mapper.fromAccountOperation(op)).collect(Collectors.toList());
+        List<AccountOperation> accountOperation =  accountOpRepo.findByAccountId(accountId);
+        return  accountOperation.stream().map(op -> mapper.fromAccountOperation(op)).collect(Collectors.toList());
 
     }
 
@@ -177,7 +185,7 @@ public class AccountImplementation implements AccountService
         Account account=accountRepo.findById(accountId).orElse(null);
         if(account==null) throw new AccountNotFoundException("Account not Found");
         Page<AccountOperation> accountOperations = accountOpRepo.findByAccountIdOrderByOperationDateDesc(accountId, PageRequest.of(page, size));
-      AccountHistoryDto accountHistoryDTO=new AccountHistoryDto();
+        AccountHistoryDto accountHistoryDTO=new AccountHistoryDto();
         List<AccountOperationDto> accountOperationDTOS = accountOperations.getContent().stream().map(op -> mapper.fromAccountOperation(op)).collect(Collectors.toList());
         accountHistoryDTO.setAccountOperationDTOS(accountOperationDTOS);
         accountHistoryDTO.setAccountId(account.getId());

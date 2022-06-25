@@ -19,6 +19,8 @@ public interface ClientRepository extends JpaRepository<Client,Long> {
     List<Client> findAllByAgent(Agent agent);
     @Query( "select u from User u inner join u.roles r where r.name in :roles" )
     List<User> findBySpecificRoles(@Param("roles") RoleOfUser roles);
+    @Query( "select c,r from Client c inner join c.user r where r.id in :user_id" )
+    Optional<Client> findByUser(@Param("user_id") Long id);
 
 
 //    @Query("select u from User u join  Client c on c.id=u.id ")

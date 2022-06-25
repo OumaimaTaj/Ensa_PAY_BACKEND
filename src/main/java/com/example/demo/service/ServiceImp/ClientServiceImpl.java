@@ -2,6 +2,7 @@ package com.example.demo.service.ServiceImp;
 
 
 import com.example.demo.dto.AccountDto;
+import com.example.demo.dto.FactureDto;
 import com.example.demo.dto.UserDto;
 import com.example.demo.enums.RoleOfUser;
 import com.example.demo.mappers.AccountMapperImpl;
@@ -30,6 +31,7 @@ public class ClientServiceImpl implements ClientService {
     private AccountMapperImpl mapper;
     private final AgentRepository agentRepository;
     private final MailService mailService;
+    private final FactureRepository factureRepository;
     // Logger
     private final Logger logger = LoggerFactory.getLogger(ClientServiceImpl.class);
 
@@ -41,7 +43,7 @@ public class ClientServiceImpl implements ClientService {
                              PasswordEncoder passwordEncoder,
                              RoleRepository roleRepository,
                              AgentRepository agentRepository,
-                             MailService mailService) {
+                             MailService mailService, FactureRepository factureRepository) {
         this.userRepository = userRepository;
         this.clientRepository = clientRepository;
         this.accountRepository = accountRepository;
@@ -49,6 +51,7 @@ public class ClientServiceImpl implements ClientService {
         this.roleRepository = roleRepository;
         this.agentRepository = agentRepository;
         this.mailService = mailService;
+        this.factureRepository = factureRepository;
     }
 
     @Override
@@ -139,13 +142,11 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public List<AccountDto> getClientAccountsList(Client client) {
-        return accountRepository.findAllByClient(client)
-                .stream()
-                .map(AccountDto::fromEntity)
-                .collect(Collectors.toList());
-    }
+    public Account getClientAccountsList(Client client) {
 
+
+        return accountRepository.findByClient(client);
+    }
     @Override
     public List<User> getClients(RoleOfUser role) {
 
@@ -168,5 +169,73 @@ public class ClientServiceImpl implements ClientService {
     private Integer generateECode(){
         return new Random().nextInt(9000) + 1000;
     }
+    @Override
+    public void updateClient(User user, UserDto userDto) {
+
+
+        // Check if the email is already taken
+        if ( ! user.getEmail().equals(userDto.getEmail())) {
+            if (userRepository.existsByEmail(userDto.getEmail())) {
+                throw new RuntimeException("Email is already taken");
+            }
+        }
+        user.setUsername(userDto.getUsername());
+        user.setEmail(userDto.getEmail());
+        user.setAddress(userDto.getAddress());
+        user.setIDCard(userDto.getIDCard());
+        user.setBirthday(userDto.getBirthday());
+        user.setFirst_time("changed");
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+
+
+        if ( ! Strings.isNullOrEmpty(userDto.getPhoneNumber())) {
+            user.setPhoneNumber(userDto.getPhoneNumber());
+        }
+
+        userRepository.save(user);
+    }
+
+
+
+    public Optional<Client> findByUser(Long client){
+
+        return clientRepository.findByUser(client);
+    }
+
+    @Override
+    public List<Facture> findFacture(Long id) {
+        Client client=clientRepository.findById(id).get();
+        return client.getFactures();
+    }
+
+    @Override
+    public void updateFacture(Long id) {
+        Facture facture=factureRepository.findById(id).get();
+        facture.setPayed(true);
+        factureRepository.save(facture);
+    }
+
+    @Override
+    public void createFacture(FactureDto factureDto, Long id) {
+        Facture facture=new Facture();
+        facture=Facture.builder().build();
+        facture.setPayed(factureDto.isPayed());
+        facture.setRef(factureDto.getRef());
+        facture.setPrix(factureDto.getPrix());
+        facture.setAgence_name(factureDto.getAgence_name());
+        facture.setClient(clientRepository.findById(id).get());
+        factureRepository.save(facture);
+    }
+
+    @Override
+    public List<Facture> findFactureByAgence(Long id, String agence) {
+        Client client=clientRepository.findById(id).get();
+        return client.getFactures().stream().filter(facture -> facture.getAgence_name().equals(agence)).collect(Collectors.toList());
+    }
+
+
+
+
+
 
 }

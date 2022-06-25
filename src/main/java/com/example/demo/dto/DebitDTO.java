@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 public class DebitDTO {
-    private String accountId;
+    private long accountId;
     private double amount;
 
 }

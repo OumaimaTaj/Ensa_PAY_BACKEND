@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+
 public interface AccountService {
 
 
@@ -22,16 +23,17 @@ public interface AccountService {
 
     AccountDto getAccount(String accountID)throws AccountNotFoundException;
 
-     void debit(String accountId, double amount) ;
+    void debit(long accountId, double amount) ;
 
 
 
-    void credit(String accountId, double amount);
+    // void credit(String accountId, double amount);
+    void credit(long accountId, double amount);
 
     void detlete(String accounId);
 
-    void transfer(String accountIdSource,String accountIdDestination, double amount);
-
+    // void transfer(String accountIdSource,String accountIdDestination, double amount);
+    void transfer(long accountIdSource,long  accountIdDestination, double amount);
 
     List<AccountDto> AccountList();
 
@@ -41,4 +43,3 @@ public interface AccountService {
     AgentDto getAgent(Long customerId) ;
     AccountHistoryDto getAccountHistory(String accountId, int page, int size);
 }
-

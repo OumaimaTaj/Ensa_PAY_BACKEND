@@ -10,6 +10,7 @@ import com.example.demo.service.AccountService;
 import com.example.demo.service.AgentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,32 +30,34 @@ public class AgentController {
         this.agentService = agentService;
         this.accountService = accountService;
     }
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
 
     @GetMapping("/getAll")
     public List<User> getClients(){
         return agentService.getAgents(RoleOfUser.ROLE_AGENT);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("{id}")
     public void updateAgent(@PathVariable("id") Agent agent, @RequestBody UserDto userDto) {
         agentService.updateAgent(agent, userDto);
     }
-
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("{id}")
     public void deleteAgent(@PathVariable("id") User agent) {
         agentService.deleteAgent(agent);
     }
-
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_AGENT')")
     @RequestMapping(path = "{id}/password", method = { RequestMethod.POST, RequestMethod.PUT })
     public void changePassword(@PathVariable("id") Agent agent, @RequestBody String passwordDto) {
         agentService.changePassword(agent, passwordDto);
     }
-
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/{id}")
     public AgentDto getAgent(@PathVariable(name = "id") Long agentId)  {
         return accountService.getAgent(agentId);
     }
-
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/create")
     public Agent createAgent(@RequestBody UserDto userDto) {
         return agentService.createAgent(userDto);
