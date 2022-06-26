@@ -129,18 +129,13 @@ public class AgentServiceImpl implements AgentService {
     }
 
     @Override
-    public void changePassword(Agent agent, String passwordDto) {
-        User user = agent.getUser();
-        for(Role role:user.getRoles()) {
-        if (! role.getName().equals(RoleOfUser.ROLE_ADMIN)) {
-            if (!Objects.equals(passwordDto, user.getPassword())) {
-                throw new RuntimeException("The current password is incorrect.");
-            }
-        }
+    public void changePassword(User user,  UserDto userDto) {
+
+
 
         user.setPassword(
-                passwordDto
-        );}
+               passwordEncoder.encode( userDto.getPassword())
+        );
 
         userRepository.save(user);
     }

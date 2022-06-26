@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.dto.*;
 import com.example.demo.exceptions.AccountNotFoundException;
+import com.example.demo.model.Agent;
 import com.example.demo.model.User;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +41,6 @@ public interface AccountService {
 
     List<AccountOperationDto> accountHistory(String accountId);
 
-    AgentDto getAgent(Long customerId) ;
+    Agent getAgent(Long customerId) ;
     AccountHistoryDto getAccountHistory(String accountId, int page, int size);
 }

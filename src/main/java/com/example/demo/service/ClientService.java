@@ -19,7 +19,7 @@ public interface ClientService {
 
     Client createClient(UserDto userDto, Long userId);
 
-    void changePassword(Client client, String password);
+    void changePassword(User client, UserDto userDto);
 
 //    List<AccountDto> getClientAccountsList(Client client);
 

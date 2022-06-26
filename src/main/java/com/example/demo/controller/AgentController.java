@@ -49,15 +49,14 @@ public class AgentController {
     }
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_AGENT')")
     @RequestMapping(path = "{id}/password", method = { RequestMethod.POST, RequestMethod.PUT })
-    public void changePassword(@PathVariable("id") Agent agent, @RequestBody String passwordDto) {
+    public void changePassword(@PathVariable("id") User agent, @RequestBody UserDto passwordDto) {
         agentService.changePassword(agent, passwordDto);
     }
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/{id}")
-    public AgentDto getAgent(@PathVariable(name = "id") Long agentId)  {
+    public Agent getAgent(@PathVariable(name = "id") Long agentId)  {
         return accountService.getAgent(agentId);
     }
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/create")
     public Agent createAgent(@RequestBody UserDto userDto) {
         return agentService.createAgent(userDto);

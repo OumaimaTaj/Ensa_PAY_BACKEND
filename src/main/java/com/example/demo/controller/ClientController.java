@@ -1,17 +1,19 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.AccountDto;
 import com.example.demo.dto.FactureDto;
 import com.example.demo.dto.UserDto;
 import com.example.demo.enums.RoleOfUser;
 import com.example.demo.model.Client;
 import com.example.demo.model.Facture;
 import com.example.demo.model.User;
+import com.example.demo.repository.FactureRepository;
 import com.example.demo.service.AccountService;
 import com.example.demo.service.ClientService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,11 +26,15 @@ import java.util.Optional;
 public class ClientController {
     private final ClientService clientService;
     private final AccountService service;
+    private final FactureRepository factureRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public ClientController(ClientService clientService,AccountService service) {
+    public ClientController(ClientService clientService, AccountService service, FactureRepository factureRepository, PasswordEncoder passwordEncoder) {
         this.clientService = clientService;
         this.service = service;
+        this.factureRepository = factureRepository;
+        this.passwordEncoder = passwordEncoder;
     }
     @PreAuthorize("hasRole('ROLE_AGENT')")
     @GetMapping("/getAll")
@@ -58,7 +64,7 @@ public class ClientController {
     }
     @PreAuthorize("hasRole('ROLE_AGENT') or hasRole('ROLE_CLIENT')")
     @RequestMapping(path = "{id}/password", method = { RequestMethod.POST, RequestMethod.PUT })
-    public void changePassword(@PathVariable("id") Client client, @RequestBody String passwordDto) {
+    public void changePassword(@PathVariable("id") User client, @RequestBody UserDto passwordDto) {
         clientService.changePassword(client, passwordDto);
     }
     @PreAuthorize("hasRole('ROLE_AGENT') or hasRole('ROLE_CLIENT')")
@@ -87,5 +93,12 @@ public class ClientController {
     @GetMapping("facture/{id}/{agence}")
     public List<Facture> getAllFacture(@PathVariable("id") Long idClient, @PathVariable("agence") String agence){
         return clientService.findFactureByAgence(idClient,agence);
+    }
+    @GetMapping("test/{id}")
+
+    public boolean test_password(@RequestBody String hach,@PathVariable("id") User user){
+        System.out.println(user.getPassword());
+        return  new BCryptPasswordEncoder().matches(hach,user.getPassword());
+
     }
 }

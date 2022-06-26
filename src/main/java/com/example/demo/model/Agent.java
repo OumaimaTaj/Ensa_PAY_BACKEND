@@ -26,7 +26,6 @@ public class Agent  implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
 
-    @JsonIgnore
     @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REMOVE})
     @JoinColumn(name = "user_id")
     private User user;

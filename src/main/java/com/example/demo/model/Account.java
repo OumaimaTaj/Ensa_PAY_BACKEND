@@ -2,6 +2,7 @@ package com.example.demo.model;
 
 
 import com.example.demo.enums.AccountStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -31,6 +32,7 @@ public  class Account {
     private AccountStatus status;
 
     @ManyToOne
+    @JsonIgnore
     private Client client;
 
 

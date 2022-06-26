@@ -23,7 +23,6 @@ public class Client  implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
-    @JsonIgnore
     @OneToOne(cascade = {CascadeType.REMOVE}, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "user_id")
     private User user;

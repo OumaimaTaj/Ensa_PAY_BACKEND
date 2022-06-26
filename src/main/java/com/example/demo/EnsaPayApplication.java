@@ -14,7 +14,7 @@ import java.util.UUID;
 import java.util.Date;
 
 
-
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -27,7 +27,10 @@ public class EnsaPayApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(EnsaPayApplication.class, args);
+        System.out.println(new BCryptPasswordEncoder().encode("1234"));
     }
+
+
 
 
     public CorsFilter corsFilter() {

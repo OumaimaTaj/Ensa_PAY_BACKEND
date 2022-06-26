@@ -14,6 +14,7 @@ import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -124,20 +125,15 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public void changePassword(Client client, String passwordDto) {
-        User user = client.getUser();
-     for(Role role:user.getRoles()) {
-         if (!role.getName().equals(RoleOfUser.ROLE_ADMIN) &&
-                 !role.getName().equals(RoleOfUser.ROLE_AGENT)) {
-             if (!Objects.equals(passwordDto, user.getPassword())) {
-                 throw new RuntimeException("The current password is incorrect.");
-             }
-         }
+    public void changePassword(User user, UserDto userDto) {
 
-         user.setPassword(
-                 passwordDto
-         );
-     }
+
+        // Check if the email is already taken
+
+        user.setFirst_time("changed");
+        if(!(userDto.getPassword()==null)) user.setPassword(new BCryptPasswordEncoder().encode(userDto.getPassword()));
+
+
         userRepository.save(user);
     }
 

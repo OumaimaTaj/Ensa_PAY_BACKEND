@@ -18,7 +18,7 @@ public interface AgentService {
 
     void updateAgent(Agent agent, UserDto userDto);
 
-    void changePassword(Agent agent, String passwordDto);
+    void changePassword(User agent, UserDto passwordDto);
 
     Agent createAgent(UserDto userDto);
 

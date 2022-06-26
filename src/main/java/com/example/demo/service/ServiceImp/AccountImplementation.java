@@ -201,10 +201,10 @@ public class AccountImplementation implements AccountService
 
 
     @Override
-    public AgentDto getAgent(Long customerId)  {
+    public Agent getAgent(Long customerId)  {
         Agent agent= agentRepository.findById(customerId)
                 .orElseThrow(() -> new RuntimeException("Customer Not found"));
-        return mapper.fromAgent(agent);
+        return agent;
     }
 
 
