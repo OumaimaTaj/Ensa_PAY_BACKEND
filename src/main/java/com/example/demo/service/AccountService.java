@@ -41,6 +41,6 @@ public interface AccountService {
 
     List<AccountOperationDto> accountHistory(String accountId);
 
-    Agent getAgent(Long customerId) ;
+   User getAgent(Long customerId) ;
     AccountHistoryDto getAccountHistory(String accountId, int page, int size);
 }

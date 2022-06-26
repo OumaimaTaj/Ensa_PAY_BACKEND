@@ -54,9 +54,10 @@ public class AgentController {
     }
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/{id}")
-    public Agent getAgent(@PathVariable(name = "id") Long agentId)  {
+    public User getAgent(@PathVariable(name = "id") Long agentId)  {
         return accountService.getAgent(agentId);
     }
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/create")
     public Agent createAgent(@RequestBody UserDto userDto) {
         return agentService.createAgent(userDto);
