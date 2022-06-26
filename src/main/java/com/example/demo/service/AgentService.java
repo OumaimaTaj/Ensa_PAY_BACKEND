@@ -17,7 +17,7 @@ import java.util.Optional;
 public interface AgentService {
 //    List<ClientDTO> getAgentClientsList(Agent agent);
 
-    void updateAgent(User user, UserDto userDto);
+    void updateAgent(Long userId, UserDto userDto);
 
     void changePassword(User agent, UserDto passwordDto);
 

@@ -39,8 +39,8 @@ public class AgentController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("{id}")
-    public void updateAgent(@PathVariable("id") User agent, @RequestBody UserDto userDto) {
-        agentService.updateAgent(agent, userDto);
+    public void updateAgent(@PathVariable("id") Long userId, @RequestBody UserDto userDto) {
+        agentService.updateAgent(userId, userDto);
     }
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("{id}")
