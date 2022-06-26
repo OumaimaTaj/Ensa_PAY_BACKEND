@@ -54,8 +54,8 @@ public class ClientController {
     }
     @PreAuthorize("hasRole('ROLE_AGENT')")
     @PutMapping("{id}")
-    public void updateClient(@PathVariable("id") Client client, @RequestBody UserDto userDto) {
-        clientService.updateClient(client, userDto);
+    public void updateClient(@PathVariable("id") Long id, @RequestBody UserDto userDto) {
+        clientService.updateClient(id, userDto);
     }
     @PreAuthorize("hasRole('ROLE_AGENT')")
     @DeleteMapping("{id}")

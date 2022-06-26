@@ -25,7 +25,7 @@ public interface ClientService {
 
     Account getClientAccountsList(Client client);
     List<User> getClients(RoleOfUser role);
-     void updateClient(User client, UserDto userDto);
+     void updateClient(Long id, UserDto userDto);
 
 
 

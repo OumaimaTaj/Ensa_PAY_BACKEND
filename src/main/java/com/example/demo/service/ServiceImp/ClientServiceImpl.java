@@ -166,8 +166,8 @@ public class ClientServiceImpl implements ClientService {
         return new Random().nextInt(9000) + 1000;
     }
     @Override
-    public void updateClient(User user, UserDto userDto) {
-
+    public void updateClient(Long id, UserDto userDto) {
+        User user=userRepository.findById(id).get();
 
         // Check if the email is already taken
         if ( ! user.getEmail().equals(userDto.getEmail())) {
