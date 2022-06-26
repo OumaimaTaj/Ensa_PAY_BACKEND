@@ -63,5 +63,9 @@ public class AgentController {
         return agentService.createAgent(userDto);
     }
 
+    @GetMapping("find/{id}")
+    public Optional<Agent> getClientById(@PathVariable("id") Long agent) {
 
+        return  agentService.findByUser(agent);
+    }
 }

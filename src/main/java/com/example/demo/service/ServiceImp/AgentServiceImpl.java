@@ -176,5 +176,10 @@ public class AgentServiceImpl implements AgentService {
                 .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
                 .toString();
     }
+    @Override
+    public Optional<Agent> findByUser(Long agent){
+
+        return agentRepository.findByUser(agent);
+    }
 
 }

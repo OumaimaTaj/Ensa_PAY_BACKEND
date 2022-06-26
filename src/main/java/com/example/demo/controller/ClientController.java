@@ -59,7 +59,7 @@ public class ClientController {
     }
     @PreAuthorize("hasRole('ROLE_AGENT')")
     @DeleteMapping("{id}")
-    public void deleteClient(@PathVariable("id") Client client) {
+    public void deleteClient(@PathVariable("id") User client) {
         clientService.deleteClient(client);
     }
     @PreAuthorize("hasRole('ROLE_AGENT') or hasRole('ROLE_CLIENT')")

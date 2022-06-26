@@ -11,6 +11,7 @@ import com.example.demo.model.User;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public interface AgentService {
@@ -29,5 +30,6 @@ public interface AgentService {
     AgentDto getAgent(Agent agent);
 
     List<User> getAgents(RoleOfUser role);
+    Optional<Agent> findByUser(Long agent);
 
 }

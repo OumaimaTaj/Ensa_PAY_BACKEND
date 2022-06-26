@@ -82,10 +82,10 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public void deleteClient(Client client) {
+    public void deleteClient(User client) {
         // Delete the client
         // All the data related to this client will be delete as well thanks to cascade option.
-        clientRepository.delete(client);
+        userRepository.delete(client);
     }
 
     @Override

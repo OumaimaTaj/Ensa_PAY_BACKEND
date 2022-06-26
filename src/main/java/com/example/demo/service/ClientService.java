@@ -15,7 +15,7 @@ import java.util.Optional;
 public interface ClientService {
     void updateClient(Client client, UserDto userDto);
 
-    void deleteClient(Client client);
+    void deleteClient(User client);
 
     Client createClient(UserDto userDto, Long userId);
 
