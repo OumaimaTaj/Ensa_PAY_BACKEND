@@ -94,8 +94,11 @@ public class AgentServiceImpl implements AgentService {
     }
 
     @Override
-    public void updateAgent(User user, UserDto userDto) {
-
+    public void updateAgent(Long userId, UserDto userDto) {
+        User user=userRepository.getById(userId);
+        if(user==null){
+            throw new InvalidCredentialsException("Agent non trouvé");
+        }
 
         // Check if the current user is an admin
         for(Role role:user.getRoles()) {
@@ -107,6 +110,9 @@ public class AgentServiceImpl implements AgentService {
                      //   throw new RuntimeException("IDCard is already taken");
                  //   }
                // }
+                user.setAddress(userDto.getAddress());
+                user.setBirthday(userDto.getBirthday());
+                user.setDescription(userDto.getDescription());
                 user.setIDCard(userDto.getIDCard());
                 user.setFirst_time("changed");
 
