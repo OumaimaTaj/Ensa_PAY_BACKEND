@@ -94,8 +94,8 @@ public class AgentServiceImpl implements AgentService {
     }
 
     @Override
-    public void updateAgent(Agent agent, UserDto userDto) {
-        User user = agent.getUser();
+    public void updateAgent(User user, UserDto userDto) {
+
 
         // Check if the current user is an admin
         for(Role role:user.getRoles()) {
